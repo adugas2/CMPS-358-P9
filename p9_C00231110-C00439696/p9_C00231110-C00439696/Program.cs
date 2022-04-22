@@ -5,14 +5,20 @@
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.EntityFrameworkCore;
 using p9_C00231110_C00439696.Data;
+
+//using p9_C00231110_C00439696.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddDbContext<HouseHoldContext>(
+    options => options.UseSqlite(
+        builder.Configuration.GetConnectionString("HouseHoldContext")));
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
+//builder.Services.AddSingleton<WeatherForecastService>();
 
 var app = builder.Build();
 
