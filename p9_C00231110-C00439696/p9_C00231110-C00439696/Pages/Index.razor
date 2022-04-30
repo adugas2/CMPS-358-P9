@@ -22,20 +22,34 @@
         household = new HouseHold();
         base.StateHasChanged();
     }
+    
+    private async void DeleteItem(HouseHold h)
+    {
+        _context.HouseHolds.Remove(h);
+        _context.SaveChanges();
+    }
 
-    private async void DeleteValidSubmit()
+    private IOrderedQueryable<HouseHold> ListItems()
     {
         try
         {
-            _context.Remove(household);
-            await _context.SaveChangesAsync();
+            var results =
+                from row in _context.HouseHolds
+                orderby row.Value
+                select row;
+
+            /*if (!results.Any())
+            {
+                return null;
+            }*/
+
+            return results;
         }
         catch
         {
-            base.StateHasChanged();
+            return null;
         }
-        household = new HouseHold();
-        base.StateHasChanged();
+        return null;
     }
 }
 
@@ -64,26 +78,12 @@
     </EditForm>
 </div>
 
-<div class="household-form">
-    <EditForm Model=@household OnValidSubmit=@DeleteValidSubmit>
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        
-        <div class="form-group">
-            <label for ="Item">Item</label>
-            <InputText id ="Item" class="form-control" @bind-Value= "household.Item" />
-        </div>
-
-        <div class="form-group">
-            <label for ="Location">Location</label>
-            <InputText id ="Location" class="form-control" @bind-Value= "household.Location" />
-        </div>
-        
-        <div class="form-group">
-            <label for ="Value">Value</label>
-            <InputText id ="Value" class="form-control" @bind-Value= "household.Value" />
-        </div>
-        
-        <button class ="btn btn-primary" type="submit">Delete HouseHold Item</button>
-    </EditForm>
+<div class="item-display">
+    <br/>
+    Items:<br/><br/>
+    @foreach(var h in @ListItems())
+    {
+        <div><span class="btn btn-primary" @onclick="@(() => {DeleteItem(h);})">Delete</span>
+            @h.Item, @h.Location, @h.Value</div>
+    }
 </div>
