@@ -35,7 +35,7 @@
         {
             var results =
                 from row in _context.HouseHolds
-                orderby row.Value
+                orderby row.Location
                 select row;
 
             /*if (!results.Any())
@@ -84,6 +84,6 @@
     @foreach(var h in @ListItems())
     {
         <div><span class="btn btn-primary" @onclick="@(() => {DeleteItem(h);})">Delete</span>
-            @h.Item, @h.Location, @h.Value</div>
+            Item: @h.Item, Location: @h.Location, Value: @h.Value</div>
     }
 </div>
